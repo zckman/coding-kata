@@ -1,3 +1,3 @@
 # Whistlebird - The cheap knock-off twitter clone
-![Alt text](./controllers_brief.svg)
-<img src="./controllers_brief.svg">
+![Alt text](./whistlebird.svg)
+<img src="./whistlebird.svg">
