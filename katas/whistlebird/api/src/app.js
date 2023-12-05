@@ -1,13 +1,63 @@
 import Fastify from 'fastify'
 import { getClient } from './db.js'
 import { createHash } from 'crypto'
+import swagger from '@fastify/swagger' 
 
 async function routes (fastify, options) {
 
+  await fastify.register(swagger, {
+    swagger: {
+      info: {
+        title: 'Whistlebird API',
+        description: 'Cheap knock-off of Twitter - Coding kata',
+        version: '0.1.0'
+      },
+      host: 'localhost',
+      schemes: ['http'],
+      consumes: ['application/json'],
+      produces: ['application/json']
+    }
+  })
+
   const sha256 = data => createHash('sha256').update(data).digest("hex")
 
-  fastify.get('/posts', async (request, reply) => {
-
+  fastify.get('/posts', {
+      schema: {
+        description: 'get all posts',
+        response: {
+          200: {
+            description: 'Successful response',
+            type: 'object',
+            properties: {
+              data: {
+                type: 'array',
+                items: {
+                  type: 'object',
+                  properties: {
+                    user: {
+                      type: 'object',
+                      properties: {
+                        name: {type: 'string'},
+                        image: {type: 'string'}
+                      }
+                    },
+                    message: {type: 'string'},
+                    created_at: {type: 'string'}
+                  }
+                } 
+              }
+            }
+          },
+          500: {
+            description: 'Failing response',
+            type: 'object',
+            properties: {
+              error: { type: 'string' }
+            }
+          },
+        }
+      }
+    }, async (request, reply) => {
     try {
       const client = await getClient() 
       const posts = await client.query('SELECT user_id, message, created_at FROM posts ORDER BY created_at desc')
@@ -29,12 +79,41 @@ async function routes (fastify, options) {
         .send({data: response})
     } catch (e) {
       return reply
-        .code(409)
+        .code(500)
         .send({error: e.message})
     }
   })
 
-  fastify.get('/users', async (request, reply) => {
+  fastify.get('/users', {
+      schema: {
+        description: 'get all users',
+        response: {
+          200: {
+            description: 'Successful response',
+            type: 'object',
+            properties: {
+              data: {
+                type: 'array',
+                items: {
+                  type: 'object',
+                  properties: {
+                    name: {type: 'string'},
+                    image: {type: 'string'}
+                  }
+                } 
+              }
+            }
+          },
+          500: {
+            description: 'Failing response',
+            type: 'object',
+            properties: {
+              error: { type: 'string' }
+            }
+          },
+        }
+      }
+    }, async (request, reply) => {
 
     const client = await getClient() 
     const users = await client.query('SELECT name, image FROM users',)
@@ -42,7 +121,32 @@ async function routes (fastify, options) {
     return reply.send({data: users.rows})
   })
 
-  fastify.post('/users', async (request, reply) => {
+  fastify.post('/users', {
+      schema: {
+        description: 'create a new user',
+        body: {
+          type: 'object',
+          properties: {
+            name: { type: 'string' },
+            password: { type: 'string' }
+          }
+        },
+        response: {
+          201: {
+            description: 'Successful response',
+            type: 'object',
+            properties: {}
+          },
+          500: {
+            description: 'Failing response',
+            type: 'object',
+            properties: {
+              error: { type: 'string' }
+            }
+          },
+        }
+      }
+    }, async (request, reply) => {
     const {name, password} = request.body
 
     const image = await fetch('https://picsum.photos/200', { method: 'GET', redirect: 'follow'})
@@ -60,12 +164,42 @@ async function routes (fastify, options) {
         .send({})
     } catch (e) {
       return reply
-        .code(409)
+        .code(500)
         .send({error: e.message})
     }
   })
 
-  fastify.post('/posts', async (request, reply) => {
+  fastify.post('/posts', {
+      schema: {
+        description: 'create a new post',
+        headers: {
+          token: {
+            type: 'string',
+            description: 'user token generated after login'
+          }
+        },
+        body: {
+          type: 'object',
+          properties: {
+            message: { type: 'string' }
+          }
+        },
+        response: {
+          201: {
+            description: 'Successful response',
+            type: 'object',
+            properties: {}
+          },
+          409: {
+            description: 'Failing response',
+            type: 'object',
+            properties: {
+              error: { type: 'string' }
+            }
+          },
+        }
+      }
+    }, async (request, reply) => {
     const { message } = request.body
     const { token } = request.headers
 
@@ -89,7 +223,39 @@ async function routes (fastify, options) {
     }
   })
 
-  fastify.post('/token', async (request, reply) => {
+  fastify.post('/token', {
+      schema: {
+        description: 'create token for registered users',
+        body: {
+          type: 'object',
+          properties: {
+            name: { type: 'string' },
+            password: { type: 'string' }
+          }
+        },
+        response: {
+          201: {
+            description: 'Successful response',
+            type: 'object',
+            properties: {
+              data:{
+                type: 'object',
+                properties: {
+                  token: {type: 'string'}
+                }
+              }
+            }
+          },
+          400: {
+            description: 'Failing response',
+            type: 'object',
+            properties: {
+              error: { type: 'string' }
+            }
+          },
+        }
+      }
+    }, async (request, reply) => {
     const { name, password } = request.body
 
     try {
@@ -108,12 +274,20 @@ async function routes (fastify, options) {
 
       return reply
         .code(200)
-        .send({token})
+        .send({
+          data: {
+            token
+          }
+        })
     } catch (e) {
       reply
         .code(400)
         .send({error: e.message})
     }
+  })
+
+  fastify.get('/docs', async (request, reply) => {
+    return fastify.swagger()
   })
 
 }
