@@ -17,3 +17,6 @@ You sigh, stand in front of his cluttered computer and start typing code with yo
     * with Username (optional)
 * You can create users (optional)
 * You can log in with username password (optional)
+
+
+You can read the OpenAPI Spec under `/docs`
