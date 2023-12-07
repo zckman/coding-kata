@@ -2,8 +2,15 @@ import Fastify from 'fastify'
 import { getClient } from './db.js'
 import { createHash } from 'crypto'
 import swagger from '@fastify/swagger' 
+import cors from '@fastify/cors' 
+
 
 async function routes (fastify, options) {
+
+  await fastify.register(cors, { 
+    origin: '*',
+    methods: ['GET', 'PUT', 'POST']
+  })
 
   await fastify.register(swagger, {
     swagger: {
@@ -73,11 +80,15 @@ async function routes (fastify, options) {
           message,
           created_at
         }
-      })) 
+      }))
+            await client.end();
+
       return reply
         .code(200)
         .send({data: response})
     } catch (e) {
+            await client.end();
+
       return reply
         .code(500)
         .send({error: e.message})
@@ -118,6 +129,8 @@ async function routes (fastify, options) {
     const client = await getClient() 
     const users = await client.query('SELECT name, image FROM users',)
     
+    await client.end();
+
     return reply.send({data: users.rows})
   })
 
@@ -159,10 +172,13 @@ async function routes (fastify, options) {
         values: [name, password, image.url, token]
       })
 
+    await client.end();
       return reply
         .code(201)
         .send({})
     } catch (e) {
+
+    await client.end();
       return reply
         .code(500)
         .send({error: e.message})
@@ -212,11 +228,15 @@ async function routes (fastify, options) {
       await client.query({
         text: 'INSERT INTO posts (message, user_id) VALUES ($1, $2)',
         values: [message, users.rows[0]?.id ?? null]
-      })
+      }) 
+            await client.end();
+
       return reply
         .code(201)
         .send({})
     } catch (e) {
+            await client.end();
+
       reply
         .code(409)
         .send({error: e.message})
@@ -271,6 +291,7 @@ async function routes (fastify, options) {
       }
 
       const token = users.rows[0].token
+    await client.end();
 
       return reply
         .code(200)
@@ -280,6 +301,8 @@ async function routes (fastify, options) {
           }
         })
     } catch (e) {
+            await client.end();
+
       reply
         .code(400)
         .send({error: e.message})
