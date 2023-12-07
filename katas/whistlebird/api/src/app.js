@@ -69,7 +69,7 @@ async function routes (fastify, options) {
         })
         const userData = user.rows[0]
         return {
-          user: userData ? {...userData} : null, 
+          user: userData ? {...userData} : undefined, 
           message,
           created_at
         }
