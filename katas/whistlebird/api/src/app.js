@@ -81,17 +81,16 @@ async function routes (fastify, options) {
           created_at
         }
       }))
-            await client.end();
 
       return reply
         .code(200)
         .send({data: response})
     } catch (e) {
-            await client.end();
-
       return reply
         .code(500)
         .send({error: e.message})
+    } finally {
+      await client.end();
     }
   })
 
@@ -172,16 +171,15 @@ async function routes (fastify, options) {
         values: [name, password, image.url, token]
       })
 
-    await client.end();
       return reply
         .code(201)
         .send({})
     } catch (e) {
-
-    await client.end();
       return reply
         .code(500)
         .send({error: e.message})
+    } finally {
+      await client.end();
     }
   })
 
@@ -229,18 +227,18 @@ async function routes (fastify, options) {
         text: 'INSERT INTO posts (message, user_id) VALUES ($1, $2)',
         values: [message, users.rows[0]?.id ?? null]
       }) 
-            await client.end();
 
       return reply
         .code(201)
         .send({})
     } catch (e) {
-            await client.end();
-
-      reply
+      return reply
         .code(409)
         .send({error: e.message})
+    } finally {
+      await client.end();
     }
+
   })
 
   fastify.post('/token', {
@@ -291,7 +289,6 @@ async function routes (fastify, options) {
       }
 
       const token = users.rows[0].token
-    await client.end();
 
       return reply
         .code(200)
@@ -301,12 +298,13 @@ async function routes (fastify, options) {
           }
         })
     } catch (e) {
-            await client.end();
-
-      reply
+      return reply
         .code(400)
         .send({error: e.message})
+    } finally {
+      await client.end();
     }
+
   })
 
   fastify.get('/docs', async (request, reply) => {
