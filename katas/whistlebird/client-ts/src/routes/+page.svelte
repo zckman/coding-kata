@@ -9,7 +9,7 @@
             <h2>
                 Whistle your thoughts. Be heard. Connect.
             </h2>
-            <div class="lead">Join the whistling revolution today!</div>
+            <a class="lead" href="/register">Join the whistling revolution today!</a>
         </div>
     </div>
     <Whistle></Whistle>
