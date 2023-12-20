@@ -2,22 +2,14 @@
   import { onMount } from 'svelte';
   import Api from './Api';
   import Post from './Post.svelte';
+  import postStore from './store';
 
-  interface User {
-    name: string;
-    image: string;
-  }
+  let posts;
 
-  interface PostData {
-    user: User;
-    message: string;
-    created_at: string;
-  }
-
-  let posts: PostData[] = [];
+  $: posts = $postStore;
 
   onMount(async () => {
-    posts = await Api.getPosts();
+    Api.getPosts().then((p) => {postStore.set(p)})
   });
 </script>
 
