@@ -7,6 +7,9 @@
   let token = '';
 
   async function submitWhistle() {
+    if (message.trim().length == 0) {
+      return;
+    }
     const whistle: Whistle = { message, token };
     await Api.postWhistle(whistle);
     message = ''
@@ -31,5 +34,5 @@
         <input id="token" type="password" class="form-control" bind:value={token} />
     </div>
 
-    <button type="submit" class="btn btn-primary">Whistle</button>
+    <button type="submit" class="btn btn-primary" disabled={message.trim().length == 0}>Whistle</button>
 </form>
