@@ -28,7 +28,7 @@
 
     <div class="form-group">
         <label for="token">Token (optional):</label>
-        <input id="token" class="form-control" bind:value={token} />
+        <input id="token" type="password" class="form-control" bind:value={token} />
     </div>
 
     <button type="submit" class="btn btn-primary">Whistle</button>
