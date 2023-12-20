@@ -1,6 +1,7 @@
 <script lang="ts">
   import Api from "$lib/Api";
   import type {Whistle} from "$lib/ApiResults";
+  import postStore from "$lib/store";
 
   let message = '';
   let token = '';
@@ -8,7 +9,8 @@
   async function submitWhistle() {
     const whistle: Whistle = { message, token };
     await Api.postWhistle(whistle);
-    //could automatically add whistle to list or refresh list
+    message = ''
+    Api.getPosts().then((p) => {postStore.set(p)})
   }
 </script>
 
