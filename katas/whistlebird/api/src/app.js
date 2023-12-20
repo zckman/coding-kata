@@ -2,8 +2,15 @@ import Fastify from 'fastify'
 import { getClient } from './db.js'
 import { createHash } from 'crypto'
 import swagger from '@fastify/swagger' 
+import cors from '@fastify/cors' 
+
 
 async function routes (fastify, options) {
+
+  await fastify.register(cors, { 
+    origin: '*',
+    methods: ['GET', 'PUT', 'POST']
+  })
 
   await fastify.register(swagger, {
     swagger: {
@@ -73,7 +80,8 @@ async function routes (fastify, options) {
           message,
           created_at
         }
-      })) 
+      }))
+
       return reply
         .code(200)
         .send({data: response})
@@ -81,6 +89,8 @@ async function routes (fastify, options) {
       return reply
         .code(500)
         .send({error: e.message})
+    } finally {
+      await client.end();
     }
   })
 
@@ -118,6 +128,8 @@ async function routes (fastify, options) {
     const client = await getClient() 
     const users = await client.query('SELECT name, image FROM users',)
     
+    await client.end();
+
     return reply.send({data: users.rows})
   })
 
@@ -166,6 +178,8 @@ async function routes (fastify, options) {
       return reply
         .code(500)
         .send({error: e.message})
+    } finally {
+      await client.end();
     }
   })
 
@@ -212,15 +226,19 @@ async function routes (fastify, options) {
       await client.query({
         text: 'INSERT INTO posts (message, user_id) VALUES ($1, $2)',
         values: [message, users.rows[0]?.id ?? null]
-      })
+      }) 
+
       return reply
         .code(201)
         .send({})
     } catch (e) {
-      reply
+      return reply
         .code(409)
         .send({error: e.message})
+    } finally {
+      await client.end();
     }
+
   })
 
   fastify.post('/token', {
@@ -280,10 +298,13 @@ async function routes (fastify, options) {
           }
         })
     } catch (e) {
-      reply
+      return reply
         .code(400)
         .send({error: e.message})
+    } finally {
+      await client.end();
     }
+
   })
 
   fastify.get('/docs', async (request, reply) => {
