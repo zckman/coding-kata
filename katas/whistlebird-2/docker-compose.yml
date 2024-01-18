@@ -4,7 +4,7 @@ services:
   postgres:
     image: postgres:14-alpine
     ports:
-      - 5432:5432
+      - "5432:5432"
     volumes:
       - ./volumes/postgres:/var/lib/postgresql/data
     environment:
@@ -12,4 +12,12 @@ services:
       - POSTGRES_USER=whistlebird
       - POSTGRES_DB=postgres
   api:
-    build: services/api
+    build:
+      context: ./services/api
+      args:
+        - USER_UID=${CURRENT_UID:-1000}
+        - USER_GID=${CURRENT_GID:-1000}
+    environment:
+      - POSTGRES_CONNECTION_STRING="postgresql://whistlebird:Whistlebird1337@postgres:5432/postgres"
+    ports:
+      - "127.0.0.1:3000:3000"
