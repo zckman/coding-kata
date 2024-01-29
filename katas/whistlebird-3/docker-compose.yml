@@ -1,0 +1,27 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:14-alpine
+    ports:
+      - 5432:5432
+    volumes:
+      - ./volumes/postgres:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=Whistlebird1337
+      - POSTGRES_USER=whistlebird
+      - POSTGRES_DB=postgres
+  api:
+    build: services/api
+    depends_on:
+      - postgres
+    links:
+      - postgres
+    environment:
+      DB_PASSWORD: Whistlebird1337
+      DB_USER: whistlebird
+      DB_NAME: postgres
+      DB_HOST: postgres
+      PORT: 8080
+    ports:
+      - 8080:3000
