@@ -9,6 +9,7 @@ Whistlebird was finally launched. The application proved sucessful and got milli
 * go to `http://localhost:8080/graphql` and make sure the endpoint is working. 
 
 ### Requirements
+* all requests should go to `api/graphql`
 * show a list of entries
 * post an entry with a simple form
 
