@@ -1,4 +1,5 @@
 export const schema = `
+  scalar Date
   type User {
     name: String!
     image: String!
@@ -6,7 +7,7 @@ export const schema = `
   type Post {
     user: User
     message: String!
-    created_at: String!
+    created_at: Date!
   }
   type Query {
     hello: String!
