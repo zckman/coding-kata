@@ -13,6 +13,8 @@ services:
       - POSTGRES_DB=postgres
   api:
     build: services/api
+    volumes:
+      - ./services/api/app:/app
     depends_on:
       - postgres
     links:

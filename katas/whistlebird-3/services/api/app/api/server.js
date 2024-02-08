@@ -6,7 +6,6 @@ import Fastify from "fastify"
 import mercurius from 'mercurius'
 import { schema, resolvers, context } from "../graphql/index.js"
 
-
 dotenv.config();
 
 // Instantiate Fastify with some config
@@ -18,6 +17,7 @@ app.register(mercurius, {
   schema,
   resolvers,
   context,
+  graphiql: true,
 })
 
 // Register your application as a normal plugin.
