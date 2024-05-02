@@ -1,4 +1,4 @@
 export interface DarkModeState {
-    darkMode: boolean;
-    toggleDarkMode: () => void;
-  }
+  darkMode: boolean;
+  toggleDarkMode: () => void;
+}
