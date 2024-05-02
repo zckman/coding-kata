@@ -6,8 +6,60 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Whistlebird</title>
   </head>
+  <style>
+    /* Inline styles for flat design */
+    body {
+      background-color: #f2f2f2;
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #3498db;
+      color: #fff;
+      text-align: center;
+      padding: 10px 0;
+    }
+
+    header img {
+      display: inline-block;
+    }
+
+    header h1 {
+      font-size: 40px;
+      font-weight: bold;
+    }
+
+    section {
+      margin: 20px 0;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    footer {
+      background-color: #3498db;
+      color: #fff;
+      text-align: center;
+      padding: 10px 0;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
   <body>
+    <header>
+      <h1>
+        <img src="src/assets/bird.svg" style="width: 48px; height: 48px" alt="Bird">
+        WhistleBird
+      </h1>
+    </header>
     <div id="root"></div>
+    <footer>
+      <p>Contact | Imprint</p>
+    </footer>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
