@@ -4,3 +4,4 @@
  * return { darkMode: boolean, toggleDarkMode: () => void }
  *
  **/
+export {}
