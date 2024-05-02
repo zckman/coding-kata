@@ -1,4 +1,4 @@
-# Welcoe to the Zustand Coding Kata
+# Welcome to the Zustand Coding Kata
 Let's have a look at how Zustand state management works in react.
 ## Why state management?
 * **Centralized Data**
@@ -44,7 +44,9 @@ function Controls() {
 }
 ```
 
-
+## Ressources
+[Official docs](https://docs.pmnd.rs/zustand/getting-started/introduction)
+Helpful [beginner's guide] (https://dev.to/avt/understanding-zustand-a-beginners-guide-with-typescript-4jjo)
 
 
 ## Get started

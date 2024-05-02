@@ -1,16 +1,10 @@
-import { FC, FormEvent, useState } from "react";
-import { useTodoStore } from "../store/todoStore";
+import { FC, useState } from "react";
 import DarkModeToggle from "./DarkModeToggle";
 
 const TodoList: FC = () => {
   const [todoValue, setTodoValue] = useState("");
-  const { todos, addTodo, deleteTodo, completeTodo } = useTodoStore();
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    addTodo(todoValue);
-    setTodoValue("");
-  };
+  const handleSubmit = () => {};
   //TODO: This state should be updated dynamically with the toggle
   const darkMode = false;
   return (
@@ -49,38 +43,34 @@ const TodoList: FC = () => {
       </form>
 
       <ul className="mt-4">
-        {todos.map((todo) => (
           <li
-            key={todo.id}
             className={`flex justify-between items-center p-2 rounded mt-2 shadow ${
               darkMode ? "bg-gray-700" : "bg-gray-50"
             }`}
           >
             <span
-              className={`${todo.isCompleted ? "line-through" : ""} ${
+            // use the line-through if a todo is completed
+               className={`${
                 darkMode ? "text-gray-200" : "text-gray-900"
               }`}
             >
-              {todo.text}
             </span>
             <div className="flex flex-row gap-4">
-              {!todo.isCompleted && (
                 <button
-                  onClick={() => completeTodo(todo.id)}
+                  // complete todo onClick
                   className="px-4 text-sm bg-green-500 hover:bg-green-600 text-white p-1 rounded transition duration-200"
                 >
                   Done
                 </button>
-              )}
+
               <button
-                onClick={() => deleteTodo(todo.id)}
+                // delete Todo onclick
                 className="px-4 text-sm bg-red-500 hover:bg-red-600 text-white p-1 rounded transition duration-200"
               >
                 Delete
               </button>
             </div>
           </li>
-        ))}
       </ul>
       <DarkModeToggle />
     </div>
