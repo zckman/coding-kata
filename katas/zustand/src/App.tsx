@@ -4,6 +4,7 @@ import { changeToDarkmodeAfter30Seconds } from "./examples";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import DarkModeToggle from "./components/DarkModeToggle";
+import {useDarkModeStore} from "./store/darkModeStore";
 
 const App: FC = () => {
   // example js call
@@ -11,7 +12,7 @@ const App: FC = () => {
     // changeToDarkmodeAfter30Seconds();
   });
   //TODO: This state should be updated dynamically with the toggle
-  const darkMode = false;
+  const darkMode = useDarkModeStore((state) => state.darkMode);
   return (
     <Router>
       <div
